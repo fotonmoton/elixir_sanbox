@@ -14,8 +14,20 @@ defmodule Student do
     end
   end
 
-  def name(student) do
-    {:error, :notpid}
+  def name(_student) do
+    {:error, :not_student}
+  end
+
+  def projects(student) when is_pid(student) do
+    try do
+      {:ok, GenServer.call(student, :projects)}
+    catch
+      :exit, {:noproc, _} -> {:error, :noproc}
+    end
+  end
+
+  def projects(_student) do
+    {:error, :not_student}
   end
 
   @impl true
@@ -27,5 +39,10 @@ defmodule Student do
   @impl true
   def handle_call(:name, _from, state) do
     {:reply, state[:name], state}
+  end
+
+  @impl true
+  def handle_call(:projects, _from, state) do
+    {:reply, state[:projects], state}
   end
 end

@@ -25,8 +25,23 @@ defmodule StudentTest do
   end
 
   test "Student.name returns an error with a reason for invalid student" do
-    {:error, :notpid} = Student.name(nil)
-    {:error, :notpid} = Student.name(0)
-    {:error, :notpid} = Student.name("ok")
+    {:error, :not_student} = Student.name(nil)
+    {:error, :not_student} = Student.name(0)
+    {:error, :not_student} = Student.name("ok")
+  end
+
+  test "Student.projects gets the projects of the student" do
+    {:ok, pid} = Student.new("name")
+    {:ok, []} = Student.projects(pid)
+  end
+
+  test "Student.projects does not crash on invalid student" do
+    Student.projects(nil)
+  end
+
+  test "Student.projects returns an error with a reason for invalid student" do
+    {:error, :not_student} = Student.projects(nil)
+    {:error, :not_student} = Student.projects(0)
+    {:error, :not_student} = Student.projects("ok")
   end
 end

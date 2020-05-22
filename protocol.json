@@ -1,0 +1,31 @@
+{
+    "student": {
+        "properties": {
+            "name": "string",
+            "projects": "[project.name]"
+        },
+        "functions": {
+            "subscribe": "project -> bool",
+            "unsubscribe": "project -> bool"
+        }
+    },
+    "project": {
+        "properties": {
+            "name": "string"
+        }
+    },
+    "intra": {
+        "properties": {
+            "students": "[student]",
+            "projects": "[project]"
+        },
+        "functions": {
+            "new": "() -> intra",
+            "student.new": "() -> student",
+            "student.evict": "student -> ()",
+            "project.add": "project -> bool",
+            "project.get": "project.name -> project",
+            "project.all": "() -> [project]"
+        }
+    }
+}

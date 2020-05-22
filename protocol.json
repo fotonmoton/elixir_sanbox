@@ -6,7 +6,9 @@
         },
         "functions": {
             "subscribe": "project -> bool",
-            "unsubscribe": "project -> bool"
+            "unsubscribe": "project -> bool",
+            "name": "() -> student.name",
+            "projects": "() -> student.projects"
         }
     },
     "project": {

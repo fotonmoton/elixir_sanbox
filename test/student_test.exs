@@ -14,4 +14,19 @@ defmodule StudentTest do
     {:ok, g_pid} = Student.new("test_subject_2")
     assert e_pid != g_pid
   end
+
+  test "Student.name gets the name of the student" do
+    {:ok, pid} = Student.new("name")
+    {:ok, "name"} = Student.name(pid)
+  end
+
+  test "Student.name does not crash on invalid student" do
+    Student.name(nil)
+  end
+
+  test "Student.name returns an error with a reason for invalid student" do
+    {:error, :notpid} = Student.name(nil)
+    {:error, :notpid} = Student.name(0)
+    {:error, :notpid} = Student.name("ok")
+  end
 end

@@ -11,6 +11,7 @@ defmodule Student do
       {:ok, GenServer.call(student, :name)}
     catch
       :exit, {:noproc, _} -> {:error, :noproc}
+      :exit, {:normal, _} -> {:error, :normal}
     end
   end
 
@@ -22,6 +23,7 @@ defmodule Student do
     try do
       {:ok, GenServer.call(student, :projects)}
     catch
+      :exit, {:noraml, _} -> {:error, :noraml}
       :exit, {:noproc, _} -> {:error, :noproc}
     end
   end

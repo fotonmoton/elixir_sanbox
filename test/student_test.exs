@@ -25,9 +25,11 @@ defmodule StudentTest do
   end
 
   test "Student.name returns an error with a reason for invalid student" do
+    not_student = spawn(fn -> nil end)
     {:error, :not_student} = Student.name(nil)
     {:error, :not_student} = Student.name(0)
     {:error, :not_student} = Student.name("ok")
+    {:error, :normal} = Student.name(not_student)
   end
 
   test "Student.projects gets the projects of the student" do
@@ -40,8 +42,10 @@ defmodule StudentTest do
   end
 
   test "Student.projects returns an error with a reason for invalid student" do
+    not_student = spawn(fn -> nil end)
     {:error, :not_student} = Student.projects(nil)
     {:error, :not_student} = Student.projects(0)
     {:error, :not_student} = Student.projects("ok")
+    {:error, :normal} = Student.name(not_student)
   end
 end

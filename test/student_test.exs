@@ -46,6 +46,6 @@ defmodule StudentTest do
     {:error, :not_student} = Student.projects(nil)
     {:error, :not_student} = Student.projects(0)
     {:error, :not_student} = Student.projects("ok")
-    {:error, :normal} = Student.name(not_student)
+    {:error, :normal} = Student.projects(not_student)
   end
 end

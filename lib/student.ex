@@ -2,9 +2,9 @@ defmodule Student do
   use GenServer
 
   @type t :: %__MODULE__{
-    name: String.t,
-    projects: list()
-  }
+          name: String.t(),
+          projects: list()
+        }
   @enforce_keys [:name]
   defstruct [:name, projects: []]
 
@@ -30,8 +30,8 @@ defmodule Student do
     try do
       {:ok, GenServer.call(student, :projects)}
     catch
-      :exit, {:noraml, _} -> {:error, :noraml}
       :exit, {:noproc, _} -> {:error, :noproc}
+      :exit, {:normal, _} -> {:error, :normal}
     end
   end
 

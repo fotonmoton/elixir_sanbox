@@ -1,6 +1,13 @@
 defmodule Student do
   use GenServer
 
+  @type t :: %__MODULE__{
+    name: String.t,
+    projects: list()
+  }
+  @enforce_keys [:name]
+  defstruct [:name, projects: []]
+
   @spec new(String.t()) :: :ignore | {:error, any} | {:ok, pid}
   def new(name) do
     GenServer.start_link(__MODULE__, name)
@@ -33,18 +40,19 @@ defmodule Student do
   end
 
   @impl true
-  @spec init(String.t()) :: {:ok, %{name: String.t(), projects: []}}
+  @spec init(String.t()) :: {:ok, %Student{}}
   def init(name) do
-    {:ok, %{name: name, projects: []}}
+    {:ok, %Student{name: name, projects: []}}
   end
 
   @impl true
-  def handle_call(:name, _from, state) do
-    {:reply, state[:name], state}
+  @spec handle_call(:name, any(), %Student{}) :: {:reply, String.t(), %Student{}}
+  def handle_call(:name, _from, student) do
+    {:reply, student.name, student}
   end
 
   @impl true
-  def handle_call(:projects, _from, state) do
-    {:reply, state[:projects], state}
+  def handle_call(:projects, _from, student) do
+    {:reply, student.projects, student}
   end
 end

@@ -1,7 +1,7 @@
 defmodule Project do
   @type t :: %__MODULE__{
-    name: String.t()
-  }
+          name: String.t()
+        }
   @enforce_keys [:name]
   defstruct [:name]
 

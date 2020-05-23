@@ -48,4 +48,44 @@ defmodule StudentTest do
     {:error, :not_student} = Student.projects("ok")
     {:error, :normal} = Student.projects(not_student)
   end
+
+  test "student can subscribe to a project" do
+    project = %Project{name: "fdf"}
+    {:ok, student} = Student.new("name")
+    :ok = Student.subscribe(student, project)
+  end
+
+  test "student has the subscribed project in their projects list" do
+    project = %Project{name: "fdf"}
+    {:ok, student} = Student.new("name")
+    :ok = Student.subscribe(student, project)
+    {:ok, projects} = Student.projects(student)
+    assert Enum.member?(projects, project)
+  end
+
+  test "student subscription adds only one project to the project list" do
+    project = %Project{name: "fdf"}
+    {:ok, student} = Student.new("name")
+    :ok = Student.subscribe(student, project)
+    {:ok, projects} = Student.projects(student)
+    assert length(projects) == 1
+  end
+
+  test "student can unsubscribe from a project" do
+    project = %Project{name: "fdf"}
+    {:ok, student} = Student.new("name")
+    :ok = Student.subscribe(student, project)
+    :ok = Student.unsubscribe(student, project)
+    {:ok, projects} = Student.projects(student)
+    refute length(projects) == 1
+  end
+
+  test "student can't unsubscribe from a project it's not subscribed to" do
+    project = %Project{name: "fdf"}
+    project2 = %Project{name: "fractol"}
+    {:ok, student} = Student.new("name")
+    {:error, :not_subscribed} = Student.unsubscribe(student, project)
+    :ok = Student.subscribe(student, project2)
+    {:error, :not_subscribed} = Student.unsubscribe(student, project)
+  end
 end

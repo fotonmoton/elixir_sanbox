@@ -9,26 +9,32 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/cache@v1
-        with:
-          path: _build
-          key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
-          restore-keys: |
-            ${{ runner.os }}-mix-
       - name: Setup elixir
         uses: actions/setup-elixir@v1
         with:
           elixir-version: 1.10.3 # Define the elixir version [required]
           otp-version: 22.2 # Define the OTP version [required]
+
+      - name: Cache PLTs
+        uses: actions/cache@v1
+        with:
+          path: priv/plts
+          key: ${{ runner.os }}-plts
+
       - name: Install Dependencies
         run: mix deps.get
+
       - name: Check Formatting
         run: mix format --check-formatted
+
       - name: Typecheck
         run: mix dialyzer
+
       - name: Run Credo
         run: mix credo
+
       - name: Run Tests
         run: mix test

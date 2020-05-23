@@ -1,4 +1,5 @@
 # ElixirSanbox
+![Elixir CI](https://github.com/fotonmoton/elixir_sanbox/workflows/Elixir%20CI/badge.svg?branch=master)
 
 **TODO: Add description**
 

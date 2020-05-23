@@ -77,25 +77,25 @@ defmodule Student do
   @impl true
   def handle_call({:subscribe, project}, _from, student) do
     {:reply, :ok,
-      %Student{
-        name: student.name,
-        projects: [project | student.projects]
-      }
-    }
+     %Student{
+       name: student.name,
+       projects: [project | student.projects]
+     }}
   end
 
   @impl true
   def handle_call({:unsubscribe, project}, _from, student) do
-    response = if Enum.member?(student.projects, project) do
-                :ok
-               else
-                {:error, :not_subscribed}
-               end
+    response =
+      if Enum.member?(student.projects, project) do
+        :ok
+      else
+        {:error, :not_subscribed}
+      end
+
     {:reply, response,
-      %Student{
-        name: student.name,
-        projects: Enum.filter(student.projects, fn p -> p != project end)
-      }
-    }
+     %Student{
+       name: student.name,
+       projects: Enum.filter(student.projects, fn p -> p != project end)
+     }}
   end
 end

@@ -8,54 +8,61 @@ defmodule Student do
   @enforce_keys [:name]
   defstruct [:name, projects: []]
 
-  @spec new(String.t()) :: :ignore | {:error, any} | {:ok, pid}
+  defmodule Repr do
+    @type t :: %__MODULE__{
+            pid: pid()
+          }
+    @enforce_keys [:pid]
+    defstruct [:pid]
+  end
+
+  @spec new(String.t()) :: :ignore | {:error, any} | {:ok, Student.Repr.t()}
   def new(name) do
-    GenServer.start_link(__MODULE__, name)
-  end
-
-  def name(student) when is_pid(student) do
-    try do
-      {:ok, GenServer.call(student, :name)}
-    catch
-      :exit, {:noproc, _} -> {:error, :noproc}
-      :exit, {:normal, _} -> {:error, :normal}
+    case GenServer.start_link(__MODULE__, name) do
+      {:ok, pid} -> {:ok, %Student.Repr{pid: pid}}
+      error -> error
     end
   end
 
-  def name(_student) do
-    {:error, :not_student}
-  end
-
-  def projects(student) when is_pid(student) do
-    try do
-      {:ok, GenServer.call(student, :projects)}
-    catch
-      :exit, {:noproc, _} -> {:error, :noproc}
-      :exit, {:normal, _} -> {:error, :normal}
+  def name(%Student.Repr{pid: pid}) do
+    if Process.alive?(pid) do
+      {:ok, GenServer.call(pid, :name)}
+    else
+      {:error, :noproc}
     end
   end
 
-  def projects(_student) do
-    {:error, :not_student}
-  end
+  def name(_student), do: {:error, :not_student}
 
-  def subscribe(student, project) when is_pid(student) do
-    try do
-      GenServer.call(student, {:subscribe, project})
-    catch
-      :exit, {:noproc, _} -> {:error, :noproc}
-      :exit, {:normal, _} -> {:error, :normal}
+  def projects(%Student.Repr{pid: pid}) do
+    if Process.alive?(pid) do
+      {:ok, GenServer.call(pid, :projects)}
+    else
+      {:error, :noproc}
     end
   end
 
-  def unsubscribe(student, project) when is_pid(student) do
-    try do
-      GenServer.call(student, {:unsubscribe, project})
-    catch
-      :exit, {:noproc, _} -> {:error, :noproc}
-      :exit, {:normal, _} -> {:error, :normal}
+  def projects(_student), do: {:error, :not_student}
+
+  def subscribe(%Student.Repr{pid: pid}, project) do
+    if Process.alive?(pid) do
+      GenServer.call(pid, {:subscribe, project})
+    else
+      {:error, :noproc}
     end
   end
+
+  def subscribe(_student, _project), do: {:error, :not_student}
+
+  def unsubscribe(%Student.Repr{pid: pid}, project) do
+    if Process.alive?(pid) do
+      GenServer.call(pid, {:unsubscribe, project})
+    else
+      {:error, :noproc}
+    end
+  end
+
+  def unsubscribe(_student, _project), do: {:error, :not_student}
 
   @impl true
   @spec init(String.t()) :: {:ok, %Student{}}

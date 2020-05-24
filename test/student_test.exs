@@ -29,7 +29,7 @@ defmodule StudentTest do
     {:error, :not_student} = Student.name(nil)
     {:error, :not_student} = Student.name(0)
     {:error, :not_student} = Student.name("ok")
-    {:error, :normal} = Student.name(not_student)
+    {:error, :not_student} = Student.name(not_student)
   end
 
   test "Student.projects gets the projects of the student" do
@@ -46,7 +46,7 @@ defmodule StudentTest do
     {:error, :not_student} = Student.projects(nil)
     {:error, :not_student} = Student.projects(0)
     {:error, :not_student} = Student.projects("ok")
-    {:error, :normal} = Student.projects(not_student)
+    {:error, :not_student} = Student.projects(not_student)
   end
 
   test "student can subscribe to a project" do

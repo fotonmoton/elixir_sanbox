@@ -7,15 +7,10 @@ defmodule Intra do
         }
   defstruct students: [], projects: []
 
+  # client side
   @spec new :: :ignore | {:error, any} | {:ok, pid}
   def new() do
     GenServer.start_link(__MODULE__, nil)
-  end
-
-  @impl true
-  @spec init(any) :: {:ok, Intra.t()}
-  def init(_) do
-    {:ok, %Intra{students: [], projects: []}}
   end
 
   @spec students(pid()) :: list(Student.t())
@@ -26,6 +21,13 @@ defmodule Intra do
   @spec projects(pid()) :: list(Project.t())
   def projects(pid) do
     GenServer.call(pid, :projects)
+  end
+
+  # server side
+  @impl true
+  @spec init(any) :: {:ok, Intra.t()}
+  def init(_) do
+    {:ok, %Intra{students: [], projects: []}}
   end
 
   @impl true

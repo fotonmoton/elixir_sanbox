@@ -121,7 +121,7 @@ defmodule Student do
   @impl true
   @spec init(String.t()) :: {:ok, %Student{}}
   def init(name) do
-    # TODO: handle error
+    # XXX: handle error
     {:ok, event_manager} = Student.Event.new()
     {:ok, %Student{name: name, event_manager: event_manager, projects: []}}
   end

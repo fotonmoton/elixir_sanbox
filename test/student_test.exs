@@ -88,4 +88,20 @@ defmodule StudentTest do
     :ok = Student.subscribe(student, project2)
     {:error, :not_subscribed} = Student.unsubscribe(student, project)
   end
+
+  test "subscription to student events" do
+    # I think student process can store all subscribed pids and
+    # broadcast major events to subscribed processes
+    {:ok, student} = Student.new("name")
+
+    # maybe function name should be different
+    :ok = Student.Event.subscribe(student, self())
+  end
+
+  test "project subscription event" do
+    {:ok, student} = Student.new("name")
+    :ok = Student.Event.subscribe(student, self())
+    Student.subscribe(student, Project.new("project"))
+    assert_receive {:subscribed_to_project, _student, _project}
+  end
 end

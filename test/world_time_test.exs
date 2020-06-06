@@ -14,13 +14,13 @@ defmodule WorldTimeTest do
     {:error, :badarg} = WorldTime.start(0)
     {:error, :badarg} = WorldTime.start(-1)
   end
-  
+
   test "WorldTime agent correctly applies multiplier" do
     Enum.map(1..5, fn multiplier ->
-        {:ok, _} = WorldTime.start(multiplier)
-        Process.sleep(1000)
-        assert NaiveDateTime.add(WorldTime.epoch, multiplier) == WorldTime.now
-        WorldTime.stop
-      end)
+      {:ok, _} = WorldTime.start(multiplier)
+      Process.sleep(1000)
+      assert NaiveDateTime.add(WorldTime.epoch(), multiplier) == WorldTime.now()
+      WorldTime.stop()
+    end)
   end
 end

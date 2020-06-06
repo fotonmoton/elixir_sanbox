@@ -14,10 +14,14 @@ defmodule WorldTime do
   def start(multiplier) when multiplier <= 0, do: {:error, :badarg}
 
   def start(multiplier) do
-    start = NaiveDateTime.utc_now
-    Agent.start_link(fn ->
-      %WorldTime{multiplier: multiplier, start: start}
-    end, name: __MODULE__)
+    start = NaiveDateTime.utc_now()
+
+    Agent.start_link(
+      fn ->
+        %WorldTime{multiplier: multiplier, start: start}
+      end,
+      name: __MODULE__
+    )
   end
 
   def stop do
@@ -25,7 +29,8 @@ defmodule WorldTime do
   end
 
   def now() do
-    now = NaiveDateTime.utc_now
+    now = NaiveDateTime.utc_now()
+
     Agent.get(__MODULE__, fn %WorldTime{multiplier: m, start: s} ->
       NaiveDateTime.add(@unit_epoch, NaiveDateTime.diff(now, s) * m)
     end)

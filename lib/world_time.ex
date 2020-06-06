@@ -10,7 +10,6 @@ defmodule WorldTime do
   @enforce_keys [:multiplier, :start]
   defstruct [:multiplier, :start]
 
-  # TODO: Upper limit should be defined as well.
   def start(multiplier) when multiplier <= 0, do: {:error, :badarg}
 
   def start(multiplier) do

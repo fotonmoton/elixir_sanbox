@@ -42,7 +42,7 @@ defmodule StudentTest do
   end
 
   test "Student.projects returns an error with a reason for invalid student" do
-    not_student = spawn(fn -> nil end)
+    not_student = spawn(fn -> Process.sleep(:infinity) end)
     {:error, :not_student} = Student.projects(nil)
     {:error, :not_student} = Student.projects(0)
     {:error, :not_student} = Student.projects("ok")

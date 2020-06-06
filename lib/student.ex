@@ -42,7 +42,7 @@ defmodule Student do
 
     # server side
     @impl true
-    @spec init(any) :: {:ok, Student.Event.t()}
+    @spec init(any()) :: {:ok, Student.Event.t()}
     def init(_) do
       {:ok, %Event{}}
     end
@@ -60,7 +60,7 @@ defmodule Student do
   end
 
   # client side
-  @spec new(String.t()) :: :ignore | {:error, any} | {:ok, Student.Repr.t()}
+  @spec new(String.t()) :: :ignore | {:error, any()} | {:ok, Student.Repr.t()}
   def new(name) do
     case GenServer.start_link(__MODULE__, name) do
       {:ok, pid} -> {:ok, %Student.Repr{pid: pid}}
@@ -68,7 +68,7 @@ defmodule Student do
     end
   end
 
-  @spec name(Student.Repr.t()) :: {:error, :noproc | :not_student} | {:ok, charlist()}
+  @spec name(Student.Repr.t()) :: {:error, :noproc | :not_student} | {:ok, String.t()}
   def name(%Student.Repr{pid: pid}) do
     if Process.alive?(pid) do
       {:ok, GenServer.call(pid, :name)}
@@ -79,7 +79,7 @@ defmodule Student do
 
   def name(_student), do: {:error, :not_student}
 
-  @spec projects(any) :: {:error, :noproc | :not_student} | {:ok, list(Project.t())}
+  @spec projects(any()) :: {:error, :noproc | :not_student} | {:ok, list(Project.t())}
   def projects(%Student.Repr{pid: pid}) do
     if Process.alive?(pid) do
       {:ok, GenServer.call(pid, :projects)}
@@ -90,7 +90,7 @@ defmodule Student do
 
   def projects(_student), do: {:error, :not_student}
 
-  @spec subscribe(Student.Repr.t(), Project.t()) :: {:error, :noproc | :not_student} | {:ok}
+  @spec subscribe(Student.Repr.t(), Project.t()) :: {:error, :noproc | :not_student} | :ok
   def subscribe(%Student.Repr{pid: pid}, project) do
     if Process.alive?(pid) do
       GenServer.call(pid, {:subscribe, project})
@@ -101,7 +101,7 @@ defmodule Student do
 
   def subscribe(_student, _project), do: {:error, :not_student}
 
-  @spec unsubscribe(Student.Repr.t(), Project.t()) :: {:error, :noproc | :not_subscribed} | {:ok}
+  @spec unsubscribe(Student.Repr.t(), Project.t()) :: {:error, :noproc | :not_subscribed} | :ok
   def unsubscribe(%Student.Repr{pid: pid}, project) do
     if Process.alive?(pid) do
       GenServer.call(pid, {:unsubscribe, project})
@@ -143,8 +143,7 @@ defmodule Student do
     {:reply, :ok,
      %Student{
        student
-       | name: student.name,
-         projects: [project | student.projects]
+       | projects: [project | student.projects]
      }}
   end
 
@@ -160,8 +159,7 @@ defmodule Student do
     {:reply, response,
      %Student{
        student
-       | name: student.name,
-         projects: Enum.filter(student.projects, fn p -> p != project end)
+       | projects: Enum.filter(student.projects, fn p -> p != project end)
      }}
   end
 
